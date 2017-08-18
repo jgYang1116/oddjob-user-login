@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <tx:annotation-driven/>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="location" value="classpath:mysql.properties"></property>
+    </bean>
+
+    <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close" autowire="no">
+        <property name="url" value="${mysql.db.url}"></property>
+        <property name="username" value="${mysql.db.username}"></property>
+        <property name="password" value="${mysql.db.password}"></property>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="minIdle" value="1"/>
+        <property name="maxIdle" value="5"/>
+        <property name="maxActive" value="100"/>
+        <property name="initialSize" value="1"/>
+        <property name="testOnBorrow" value="true"/>
+        <property name="validationQuery" value="select 1"/>
+        <property name="testOnReturn" value="true"/>
+        <property name="validationInterval" value="500000"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="30"/>
+        <property name="fairQueue" value="false"/>
+        <property name="defaultAutoCommit" value="false"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <property name="typeAliasesPackage" value="com.gongren.oddjob.user.login.rpc.domain" />
+        <property name="mapperLocations" value="classpath:/mappers/*Mapper.xml" />
+    </bean>
+
+    <!-- 扫描basePackage下所有dao -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.gongren.oddjob.user.login.rpc.mysql" />
+        <property name="annotationClass" value="com.gongren.oddjob.user.login.rpc.mysql.annotation.DlgRepository" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+</beans>

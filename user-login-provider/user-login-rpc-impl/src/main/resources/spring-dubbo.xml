@@ -22,5 +22,8 @@
     <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
     
     <dubbo:provider timeout="300000" version="${dubbo.reference.version}"/>
+    
+    <!-- 短信服务（使用上海服务代码） -->
+    <dubbo:reference interface="com.gongren.project.commons.service.sms.api.service.ISmsRpcService" id="smsRpcService" version="0.0.1"></dubbo:reference>
 
 </beans>

@@ -36,10 +36,10 @@
 			<artifactId>user-login-rpc-rabbitmq</artifactId>
 			<version>${local.version}</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>com.gongren.project.commons.service.sms</groupId> -->
-		<!-- <artifactId>gongren-commons-service-sms-rpc-api</artifactId> -->
-		<!-- <version>0.0.1</version> -->
-		<!-- </dependency> -->
+	<dependency>
+		<groupId>com.gongren.project.commons.service.sms</groupId>
+		<artifactId>gongren-commons-service-sms-rpc-api</artifactId>
+		<version>0.0.1</version>
+	</dependency>
 	</dependencies>
 </project>

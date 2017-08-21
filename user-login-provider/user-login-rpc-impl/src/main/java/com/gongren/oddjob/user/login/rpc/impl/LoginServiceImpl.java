@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -22,6 +21,12 @@ import com.gongren.oddjob.user.login.rpc.rabbitmq.producer.api.IOjUserLoginSende
 import com.gongren.oddjob.user.login.rpc.redis.api.CacheService;
 import com.gongren.oddjob.user.login.rpc.vo.UserLoginVo;
 import com.gongren.oddjob.user.login.rpc.vo.UserVo;
+import com.gongren.oddjob.user.login.tool.utils.JSONObjectSingleton;
+import com.gongren.oddjob.user.login.tool.utils.StringUtils;
+import com.gongren.project.commons.enums.SourceEnum;
+import com.gongren.project.commons.enums.VerifyCodeEnum;
+import com.gongren.project.commons.service.sms.api.service.ISmsRpcService;
+import com.gongren.project.commons.service.sms.api.vo.VerifyCodeRpcVo;
 
 @Service(interfaceName="com.gongren.oddjob.user.login.rpc.api.ILoginService")
 public class LoginServiceImpl implements ILoginService {
@@ -33,8 +38,8 @@ public class LoginServiceImpl implements ILoginService {
 	private CacheService cacheService;
 	@Autowired
 	private PasswordMatcher credentialsMatcher;
-//	@Autowired
-//	private OjUserLoginMapper ojUserLoginMapper;
+	@Autowired
+	private ISmsRpcService smsRpcService;
 	@Autowired
 	private IOjUserLoginSender sender;
 	@Value("${token.key}")
@@ -42,6 +47,12 @@ public class LoginServiceImpl implements ILoginService {
 
 	@Override
 	public JSONObject login(String principal, int type, String credentials, String sms) {
+		JSONObject resource = JSONObjectSingleton.getInstance();
+		if(!StringUtils.isNotEmptyByAll(principal,type,credentials)) {
+			resource.put("msg", "缺少必要参数");
+			resource.put("code", DictionaryConstants.Result.FAIL);
+			return resource;
+		}
 		if (StringUtils.isNotEmpty(sms))
 			return loginByPassword(principal, type, credentials);
 		return logingByCode(principal, type, credentials);
@@ -53,23 +64,29 @@ public class LoginServiceImpl implements ILoginService {
 	 * @param principal
 	 * @param type
 	 * @param credentials
-	 * @return Author: yjg@gongren.com Date: 2017年8月8日 下午7:39:56 Version: 1.0.0
+	 * @return Author: yjg@gongren.com Date: 2017年8月18日 下午7:39:56 Version: 1.0.0
 	 */
 	private JSONObject logingByCode(String principal, int type, String credentials) {
-		JSONObject resource = new JSONObject();
-//		VerifyCodeRpcVo verifyCodeVo = new VerifyCodeRpcVo();
-		/*verifyCodeVo.setPhone(principal);
-		verifyCodeVo.setVerifyCode(credentials);
-		verifyCodeVo.setSource(SourceEnum.ODD_JOB);
-		VerifyCodeEnum verifyCodeEnum = smsRpcService.checkCodeAndDelete(verifyCodeVo);
-		if (null == verifyCodeEnum || !VerifyCodeEnum.SUCCESS.equals(verifyCodeEnum)) {
+		JSONObject resource = JSONObjectSingleton.getInstance();;
+		try {
+			VerifyCodeRpcVo verifyCodeVo = new VerifyCodeRpcVo();
+			verifyCodeVo.setPhone(principal);
+			verifyCodeVo.setVerifyCode(credentials);
+			verifyCodeVo.setSource(SourceEnum.ODD_JOB);
+			VerifyCodeEnum verifyCodeEnum = smsRpcService.checkCodeAndDelete(verifyCodeVo);
+			if (null == verifyCodeEnum || !VerifyCodeEnum.SUCCESS.equals(verifyCodeEnum)) {
+				resource.put("msg", "验证码错误");
+				resource.put("code", DictionaryConstants.Result.FAIL);
+				return resource;
+			}
+			resource.put(resource_token, AESUtils.encryptString(principal + "_" + type, tokenKey));
+			resource.put("msg", "成功");
+			resource.put("code", DictionaryConstants.Result.SUCCESS);
+		} catch (Exception e) {
+			logger.error("登录使用短信认证失败",e);
 			resource.put("msg", "验证码错误");
 			resource.put("code", DictionaryConstants.Result.FAIL);
-			return resource;
 		}
-		resource.put(resource_token, AESUtils.encryptString(principal + "_" + type, tokenKey));
-		resource.put("msg", "成功");
-		resource.put("code", DictionaryConstants.Result.SUCCESS);*/
 		return resource;
 	}
 
@@ -82,7 +99,7 @@ public class LoginServiceImpl implements ILoginService {
 	 * @return Author: yjg@gongren.com Date: 2017年8月8日 下午7:39:54 Version: 1.0.0
 	 */
 	private JSONObject loginByPassword(String principal, int type, String password) {
-		JSONObject resource = new JSONObject();
+		JSONObject resource = JSONObjectSingleton.getInstance();
 		try {
 			//TODO 测试数据 start
 			UserVo vo = new UserVo();

@@ -79,7 +79,8 @@ public class LoginServiceImpl implements ILoginService {
 				resource.put("code", DictionaryConstants.Result.FAIL);
 				return resource;
 			}
-			resource.put(resource_token, AESUtils.encryptString(principal + "_" + type, tokenKey));
+			
+			resource.put(resource_token, setTokenToRedis(principal + "_" + type));
 			resource.put("msg", "成功");
 			resource.put("code", DictionaryConstants.Result.SUCCESS);
 		} catch (Exception e) {
@@ -88,6 +89,25 @@ public class LoginServiceImpl implements ILoginService {
 			resource.put("code", DictionaryConstants.Result.FAIL);
 		}
 		return resource;
+	}
+
+	/**
+	 * 功能描述: 
+	 * 保存登录token到redis中
+	 * @param string
+	 * @return
+	 * Author:   yjg@gongren.com
+	 * Date:     2017年8月23日 上午9:06:11
+	 * Version: 1.0.0
+	 */
+	private String setTokenToRedis(String key) {
+		String json = (String) cacheService.getObject(key);
+		if(json == null)
+			return json;
+		String token = AESUtils.encryptString(key, tokenKey);
+		JSONObject jsonObject = JSON.parseObject(json);
+		cacheService.putObject(token+"/"+System.currentTimeMillis(), jsonObject.get("id"));
+		return token;
 	}
 
 	/**
@@ -119,7 +139,7 @@ public class LoginServiceImpl implements ILoginService {
 			String realPassword = (String) jsonObject.get("password");
 			String encryptPassword = Utils.encryptPassword(password, credentialsMatcher.getPasswordService());
 			if (realPassword != null && encryptPassword != null && Utils.matchPassword(realPassword, encryptPassword, credentialsMatcher.getPasswordService())) {
-				resource.put(resource_token, AESUtils.encryptString(principal + "_" + type, tokenKey));
+				resource.put(resource_token, setTokenToRedis(principal + "_" + type));
 				resource.put("msg", "成功");
 				resource.put("code", DictionaryConstants.Result.SUCCESS);
 			} else {
@@ -149,8 +169,6 @@ public class LoginServiceImpl implements ILoginService {
 				ojUserLogin.setCreateUserId(userId);
 				ojUserLogin.setVersion(0L);
 				ojUserLogin.setIsExpire((short) 1);
-//				ojUserLoginMapper.updateIsExpire(userId);
-//				ojUserLoginMapper.save(ojUserLogin);
 				sender.send(ojUserLogin);
 			}
 			resource.put("msg", "成功");

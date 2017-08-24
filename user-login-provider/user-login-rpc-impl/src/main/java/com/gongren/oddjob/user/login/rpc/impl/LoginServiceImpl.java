@@ -154,7 +154,7 @@ public class LoginServiceImpl implements ILoginService {
 
 	@Override
 	public JSONObject saveUserLogin(UserLoginVo userLogin) {
-		JSONObject resource = new JSONObject();
+		JSONObject resource = JSONObjectSingleton.getInstance();
 		try {
 			String decryptString = AESUtils.decryptString(userLogin.getToken(), tokenKey);
 			String json = (String) cacheService.getObject(decryptString);

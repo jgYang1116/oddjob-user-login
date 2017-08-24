@@ -1,13 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-<!-- 	<parent> -->
-<!-- 		<groupId>com.gongren.project</groupId> -->
-<!-- 		<artifactId>gongren-project</artifactId> -->
-<!-- 		<version>0.0.1</version> -->
-<!-- 	</parent> -->
-
 	<groupId>com.dlg.user</groupId>
 	<artifactId>user-login</artifactId>
 	<version>1.0.0</version>
@@ -65,11 +58,11 @@
 			<artifactId>zkclient</artifactId>
 			<version>${zkclient.version}</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.gongren.project</groupId> -->
-<!-- 			<artifactId>dlg-commons</artifactId> -->
-<!-- 			<version>0.0.1</version> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>com.gongren.project</groupId>
+			<artifactId>dlg-commons</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
@@ -86,6 +79,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 	</dependencies>
 
 	<!-- Package as an executable jar -->
@@ -94,7 +88,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.0.0.BUILD-SNAPSHOT</version>
 			</plugin>
 		</plugins>
 
@@ -141,15 +134,4 @@
 			<url>http://repo.spring.io/milestone</url>
 		</pluginRepository>
 	</pluginRepositories>
-	
-	<distributionManagement>
-		<repository>
-			<id>gongren-service-api-releases</id>
-			<url>http://maven.dalinggong.com/repository/gongren-service-api-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>gongren-service-api-snapshots</id>
-			<url>http://maven.dalinggong.com/repository/gongren-service-api-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>

@@ -12,6 +12,11 @@
 		<module>user-login-restful-api</module>
 	</modules>
 
+	<properties>
+		<local.version>1.0.0</local.version>
+		<start-class>com.gongren.oddjob.user.login.rpc.UserLoginProviderApplication</start-class>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.dlg.user</groupId>
@@ -19,4 +24,23 @@
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>${start-class}</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

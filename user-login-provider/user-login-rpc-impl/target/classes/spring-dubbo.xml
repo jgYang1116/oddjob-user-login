@@ -12,18 +12,18 @@
 	</bean>
 	
 	<dubbo:annotation package="com.gongren.oddjob.user.login.rpc"/>
-    <!-- Ìá¹©·½Ó¦ÓÃÐÅÏ¢£¬ÓÃÓÚ¼ÆËãÒÀÀµ¹ØÏµ -->
+    <!-- ï¿½á¹©ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµ -->
     <dubbo:application name="${dubbo.application.name}"/>
 
-    <!-- Ê¹ÓÃmulticast¹ã²¥×¢²áÖÐÐÄ±©Â¶·þÎñµØÖ· -->
+    <!-- Ê¹ï¿½ï¿½multicastï¿½ã²¥×¢ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½Â¶ï¿½ï¿½ï¿½ï¿½ï¿½Ö· -->
     <dubbo:registry address="${dubbo.registry.address}" />
 
-    <!-- ÓÃdubboÐ­ÒéÔÚ20880¶Ë¿Ú±©Â¶·þÎñ -->
+    <!-- ï¿½ï¿½dubboÐ­ï¿½ï¿½ï¿½ï¿½20880ï¿½Ë¿Ú±ï¿½Â¶ï¿½ï¿½ï¿½ï¿½ -->
     <dubbo:protocol name="${dubbo.protocol.name}" port="${dubbo.protocol.port}" />
     
     <dubbo:provider timeout="300000" version="${dubbo.reference.version}"/>
     
-    <!-- ¶ÌÐÅ·þÎñ£¨Ê¹ÓÃÉÏº£·þÎñ´úÂë£© -->
+    <!-- ï¿½ï¿½ï¿½Å·ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Ïºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£© -->
     <dubbo:reference interface="com.gongren.project.commons.service.sms.api.service.ISmsRpcService" id="smsRpcService" version="0.0.1"></dubbo:reference>
 
 </beans>

@@ -65,11 +65,11 @@
 			<artifactId>zkclient</artifactId>
 			<version>${zkclient.version}</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.gongren.project</groupId> -->
-<!-- 			<artifactId>dlg-commons</artifactId> -->
-<!-- 			<version>0.0.1</version> -->
-<!-- 		</dependency> -->
+		<dependency>
+			<groupId>com.dlg</groupId>
+			<artifactId>commons</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
